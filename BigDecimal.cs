@@ -222,12 +222,12 @@ namespace System.Numerics {
 
         public static bool operator ==(BigDecimal left, int right)
         {
-            return left.Equals(right);
+            return left.Equals((System.Numerics.BigDecimal)right);
         }
 
         public static bool operator !=(BigDecimal left, int right)
         {
-            return !left.Equals(right);
+            return !left.Equals((System.Numerics.BigDecimal)right);
         }
 
         public static bool operator ==(BigDecimal left, BigDecimal right)
@@ -351,14 +351,15 @@ namespace System.Numerics {
 
         public static BigDecimal operator /(BigDecimal left, BigDecimal right)
         {
-            var value = (left.value * BigInteger.Pow(10,5)) / (right.value);
-            var scale = (int)left.scale - (int)right.scale+5;
+            var MaxScale = Math.Max(left.scale,right.scale);
+            var value = (left.value * BigInteger.Pow(10,5+(MaxScale-left.scale))) / (right.value* BigInteger.Pow(10,(MaxScale - right.scale)));
+            var scale = Math.Abs((int)left.scale - (int)right.scale);
             if (scale > 50)
             {
                 value /= BigInteger.Pow(10, scale - 50);
                 scale = 50;
             }
-            return new BigDecimal(value, (ushort)scale);
+            return new BigDecimal(value, (ushort)(scale-5));
         }
 
 
