@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace System.Numerics {
 	/// <summary>
@@ -320,7 +321,27 @@ namespace System.Numerics {
             return ((left - right).value <= 0);
         }
 
+        public static BigDecimal sqrt(BigDecimal input)
+        {
+            BigDecimal num =(input*input+input)/(2*input);
+            for (int i=0;i<20;i++) {
+                Debug.Log("ㅌㅌㅌ" + num);
+                BigDecimal val = sqrt1(num, input);
+                if(val!=num)
+                    num = val;
+                else
+                {
+                    return num;
+                }
+            }
+            return num;
+        }
 
+        public static BigDecimal sqrt1(BigDecimal num,BigDecimal input)
+        {
+            BigDecimal output = (num * num + input) / (2 * num);
+            return output;
+        }
 
 
         public static BigDecimal operator +(BigDecimal left, BigDecimal right) {
@@ -335,6 +356,8 @@ namespace System.Numerics {
 
         public static BigDecimal operator %(BigDecimal left, BigDecimal right)
         {
+            if (left == 0)
+                return 0;
             var scale = SameScale(ref left, ref right);
             return new BigDecimal(left.value % right.value, scale);
         }
@@ -352,14 +375,14 @@ namespace System.Numerics {
         public static BigDecimal operator /(BigDecimal left, BigDecimal right)
         {
             var MaxScale = Math.Max(left.scale,right.scale);
-            var value = (left.value * BigInteger.Pow(10,5+(MaxScale-left.scale))) / (right.value* BigInteger.Pow(10,(MaxScale - right.scale)));
-            var scale = Math.Abs((int)left.scale - (int)right.scale);
+            var value = (left.value * BigInteger.Pow(10,5+(left.scale))) / (right.value* BigInteger.Pow(10,(right.scale)));
+            var scale = Math.Abs(MaxScale);
             if (scale > 50)
             {
                 value /= BigInteger.Pow(10, scale - 50);
                 scale = 50;
             }
-            return new BigDecimal(value, (ushort)(scale-5));
+            return new BigDecimal(value, (ushort)(scale+5));
         }
 
 
@@ -390,6 +413,9 @@ namespace System.Numerics {
 
         public static explicit operator float(BigDecimal v)
         {
+            if (v == 0)
+                return 0;
+
             var value = (v.value) / BigInteger.Pow(10, v.scale - ushort.MaxValue);
             return (float)value;
         }
