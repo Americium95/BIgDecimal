@@ -4,5 +4,6 @@
 
 
 System.Numerics.BigDecimal의 하위 구성요소 입니다.
+
   sqrt 바빌로니아법을 이용하여 제곱근의 근사치를 출력합니다.
   
