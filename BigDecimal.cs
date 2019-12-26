@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
 
 namespace System.Numerics {
 	/// <summary>
@@ -325,7 +324,6 @@ namespace System.Numerics {
         {
             BigDecimal num =(input*input+input)/(2*input);
             for (int i=0;i<20;i++) {
-                Debug.Log("ㅌㅌㅌ" + num);
                 BigDecimal val = sqrt1(num, input);
                 if(val!=num)
                     num = val;
