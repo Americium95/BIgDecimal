@@ -2,7 +2,7 @@
 
 동적으로 숫자형을 나타내주는 라이브러리입니다.
 
-# System.Numerics.BigDecimal의 하위 구성요소 입니다.
+## System.Numerics.BigDecimal의 하위 구성요소 입니다.
 
   **sqrt** 바빌로니아법을 이용하여 제곱근의 근사치를 출력합니다.
   
