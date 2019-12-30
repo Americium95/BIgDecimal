@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace System.Numerics {
 	/// <summary>
@@ -322,6 +323,9 @@ namespace System.Numerics {
 
         public static BigDecimal sqrt(BigDecimal input)
         {
+            if (input == 0||input.value==0)
+                return 0;
+
             BigDecimal num =(input*input+input)/(2*input);
             for (int i=0;i<20;i++) {
                 BigDecimal val = sqrt1(num, input);
@@ -372,15 +376,17 @@ namespace System.Numerics {
 
         public static BigDecimal operator /(BigDecimal left, BigDecimal right)
         {
-            var MaxScale = Math.Max(left.scale,right.scale);
-            var value = (left.value * BigInteger.Pow(10,5+(left.scale))) / (right.value* BigInteger.Pow(10,(right.scale)));
-            var scale = Math.Abs(MaxScale);
-            if (scale > 50)
+
+            var Scale = SameScale(ref left, ref right);
+
+            var value = (left.value * BigInteger.Pow(10,50)) / (right.value);
+            
+            /*if (Scale > 50)
             {
-                value /= BigInteger.Pow(10, scale - 50);
-                scale = 50;
-            }
-            return new BigDecimal(value, (ushort)(scale+5));
+                value /= BigInteger.Pow(10, Scale - 50);
+                Scale = 50;
+            }*/
+            return new BigDecimal(value, (ushort)(50));
         }
 
 
@@ -411,11 +417,17 @@ namespace System.Numerics {
 
         public static explicit operator float(BigDecimal v)
         {
-            if (v == 0)
+
+            if (v.value == 0)
                 return 0;
 
-            var value = (v.value) / BigInteger.Pow(10, v.scale - ushort.MaxValue);
-            return (float)value;
+            var value = (v.value) / BigInteger.Pow(10,Math.Max(0,v.scale-7));
+            if(v.scale-7>=0)
+                return (float)value / (float)Math.Pow(10, 7);
+            else
+            {
+                return (float)value / (float)Math.Pow(10, 7+(v.scale - 7));
+            }
         }
 
         public static implicit operator BigDecimal(float value)
